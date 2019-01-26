@@ -7,16 +7,13 @@ module.exports = {
         "es6": true,
         "node": true
     },
-    extends: [
-        'eslint:recommended',
-        //'plugin:css-modules/recommended'
-    ],
+    extends: ['@yonyou-cloud/eslint-config/vue'],
     parserOptions: {
         sourceType: "module",
         //不使用 jsx 可以注释掉
-        ecmaFeatures: {
-            jsx: true
-        }
+        // ecmaFeatures: {
+        //     jsx: true
+        // }
     },
     plugins: [
         //不使用 react CSS-Modules 可以注释掉

@@ -1,27 +1,30 @@
 <template>
   <vue-drawer-layout
           ref="drawer"
-          :drawer-width="800">
+          :content-drawable="true"
+          :drawer-width="400">
     <div class="drawer-content" slot="drawer">
       <!-- drawer-content -->
-     qqqqqqqqqqqqq
+      <Config></Config>
     </div>
     <div slot="content">
       <!-- main-content -->
-      sssssssss
+     <Map></Map>
     </div>
   </vue-drawer-layout>
 </template>
 
 <script>
+  import Config from './Config'
+  import Map from './Map'
 export default {
   name: 'HelloWorld',
+  components: {Map, Config},
   props: {
     msg: String
   }
 }
 </script>
-
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
