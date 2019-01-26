@@ -8,7 +8,6 @@
                    :on-preview="handlePreview"
                    :on-remove="handleRemove"
                    :limit="1"
-                   :file-list="files"
                    :on-change="bind"
         >
             <i class="el-icon-upload"></i>
@@ -21,28 +20,37 @@
 </template>
 
 <script>
+    import {open} from 'shapefile'
     export default {
         name: "Config",
         data(){
             return{
                 checkTag:true,
-                file:{}
             }
         },
         methods:{
             config() {
                 const name=this.file.name
                 const extension=name.split('.')[1]
-                console.log(extension)
+                //console.log(extension)
                 if('shp'!==extension){
                     this.$alert('文件不是shp文件！请重新选择文件', {
                         confirmButtonText: '确定'
                     })
                 }else {
                     const reader=new FileReader()
-                    reader.readAsBinaryString(this.file.raw)
+                    const  fileData=this.file.raw
+                    reader.readAsArrayBuffer(fileData)
                     reader.onload = function(e){
-                        console.log(this.result)//图片的base64数据
+                        console.log(this.result)//shp
+                        open(this.result)
+                            .then(source => source.read()
+                                .then(function log(result) {
+                                    if (result.done) return;
+                                    console.log(result.value);
+                                    return source.read().then(log);
+                                }))
+                            //.catch(error => console.error(error.stack));
                     }
                 }
 
@@ -56,7 +64,7 @@
             bind(files, fileList){
                 //绑定文件
                 this.file=fileList[0]
-                console.log(this.file)
+                //console.log(this.file)
             }
 
         }
