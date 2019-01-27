@@ -25,11 +25,12 @@
         name: "Config",
         data(){
             return{
-                checkTag:true,
+                file:{}
             }
         },
         methods:{
             config() {
+                //判断文件是否为shp文件
                 const name=this.file.name
                 const extension=name.split('.')[1]
                 //console.log(extension)
@@ -39,18 +40,26 @@
                     })
                 }else {
                     const reader=new FileReader()
-                    const  fileData=this.file.raw
+                    const fileData=this.file.raw
                     reader.readAsArrayBuffer(fileData)
+                    const GeoJson={"type":"FeatureCollection","features":[]}
+                    let count=0
+                    const LocalStorage=this.$localStorage
+                    //从el-upload看，第一层parent是Config，第二层parent才是MainPage
+                    const parent=this.$parent.$parent
                     reader.onload = function(e){
-                        console.log(this.result)//shp
                         open(this.result)
                             .then(source => source.read()
                                 .then(function log(result) {
                                     if (result.done) return;
-                                    console.log(result.value);
+                                    GeoJson.features[count++]=result.value
+                                    //console.log(result.value);
                                     return source.read().then(log);
                                 }))
-                            //.catch(error => console.error(error.stack));
+                            .catch(error => console.error(error.stack)).then(()=>{
+                            LocalStorage.set('data',JSON.stringify(GeoJson))
+                            parent.emit()
+                        })
                     }
                 }
 

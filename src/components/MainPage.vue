@@ -9,7 +9,7 @@
     </div>
     <div slot="content">
       <!-- main-content -->
-     <Map></Map>
+     <Map ref="map"></Map>
     </div>
   </vue-drawer-layout>
 </template>
@@ -22,6 +22,12 @@ export default {
   components: {Map, Config},
   props: {
     msg: String
+  },
+  methods:{
+    emit(){
+      this.$refs.drawer.toggle(false)
+      this.$refs.map.initMap()
+    }
   }
 }
 </script>

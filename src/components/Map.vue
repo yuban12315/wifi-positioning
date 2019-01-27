@@ -1,5 +1,5 @@
 <template>
-    <div>2222222</div>
+    <div >2222222</div>
 </template>
 
 <script>
@@ -7,30 +7,31 @@
     import View from "ol/View";
     import TileLayer from "ol/layer/Tile";
     import XYZ from "ol/source/XYZ";
+    import Source from 'ol/source/Vector'
+    import GeoJson from 'ol/format/GeoJSON'
     import 'ol/ol.css'
+    import ol from 'ol'
     export default {
         name: "Map",
-        initMap() {
-            new Map({
-                target: "map",
-                layers: [
-                    new TileLayer({
-                        source: new XYZ({
-                            url: "http://t2.tianditu.com/DataServer?T=vec_w&x={x}&y={y}&l={z}"
-                        })
-                    }),
-                    new TileLayer({
-                        source: new XYZ({
-                            url: "http://t2.tianditu.com/DataServer?T=cva_w&x={x}&y={y}&l={z}"
-                        }),
-                        isGroup: true,
-                        name: "天地图文字标注"
-                    })
-                ],
-                view: new View({
-                    zoom: 4
+        data(){
+            return{
+
+            }
+        },
+        methods:{
+            initMap(){
+                const jsonData=JSON.parse(this.$localStorage.get('data'))
+                const vectorSource=new Source({
+                    features: (new GeoJson()).readFeatures(jsonData)
                 })
-            });
+                console.log(vectorSource)
+            }
+        },
+        created() {
+            const data=this.$localStorage.get('data')
+            if (data!==null||data!==undefined) {
+                this.initMap()
+            }
         }
     }
 </script>

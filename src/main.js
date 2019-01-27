@@ -7,7 +7,6 @@ import ElementUI from 'element-ui';
 import axios from 'axios'
 import VueLocalStorage from 'vue-localstorage'
 import DrawerLayout from 'vue-drawer-layout'
-import {open} from 'shapefile'
 
 import 'element-ui/lib/theme-chalk/index.css'
 import './assets/style.css'
@@ -19,7 +18,6 @@ Vue.use(VueLocalStorage)
 Vue.use(DrawerLayout)
 axios.defaults.withCredentials = true;
 Vue.prototype.$axios = axios;
-Vue.prototype.$shapefile=open
 //Vue.prototype.$localStorage=VueLocalStorage
 
 Vue.config.productionTip = false
