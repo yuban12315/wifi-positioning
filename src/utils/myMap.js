@@ -1,8 +1,6 @@
-import Feature from 'ol/Feature.js'
 import Map from 'ol/Map.js'
 import View from 'ol/View.js'
 import GeoJSON from 'ol/format/GeoJSON.js'
-import Circle from 'ol/geom/Circle.js'
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js'
 import {OSM, Vector as VectorSource} from 'ol/source.js'
 import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style.js'
@@ -11,6 +9,7 @@ class myMap {
     constructor (data) {
         this.data = data
         this.map = null
+        this.view = null
         this.initMap()
     }
     initMap () {
@@ -18,8 +17,6 @@ class myMap {
         const vectorSource = new VectorSource({
             features: (new GeoJSON()).readFeatures(jsonData)
         })
-        console.log(vectorSource)
-
         const vectorLayer = new VectorLayer({
             source: vectorSource,
             style: this.$getStyle()
@@ -112,6 +109,7 @@ class myMap {
         const styleFunction = function (feature) {
             return styles[feature.getGeometry().getType()]
         }
+        return styleFunction
     }
 
     getMap () {
