@@ -1,15 +1,15 @@
 import Map from 'ol/Map.js'
 import View from 'ol/View.js'
 import GeoJSON from 'ol/format/GeoJSON.js'
-import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js'
-import {OSM, Vector as VectorSource} from 'ol/source.js'
+import {Vector as VectorLayer} from 'ol/layer.js'
+import {Vector as VectorSource} from 'ol/source.js'
 import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style.js'
 
 class myMap {
     constructor (data) {
         this.data = data
         this.map = null
-        this.view = null
+        this.center()
         this.initMap()
     }
     initMap () {
@@ -23,16 +23,10 @@ class myMap {
         })
         const map = new Map({
             layers: [
-                new TileLayer({
-                    source: new OSM()
-                }),
                 vectorLayer
             ],
             target: 'map',
-            view: new View({
-                center: [0, 0],
-                zoom: 2
-            })
+            view: this.view
         })
     }
 
@@ -106,14 +100,35 @@ class myMap {
                 })
             })
         }
-        const styleFunction = function (feature) {
+        return function (feature) {
             return styles[feature.getGeometry().getType()]
         }
-        return styleFunction
     }
 
     getMap () {
         return this.map
+    }
+
+    center () {
+        const indexList1 = []
+        const indexList2 = []
+        for (const Feature of this.data.features) {
+            indexList1.push(Feature.geometry.coordinates[0][0][0])
+            indexList2.push(Feature.geometry.coordinates[0][0][1])
+        }
+        // 排序
+        function sortNumber (a, b) {
+            return a - b
+        }
+        indexList1.sort(sortNumber)
+        indexList2.sort(sortNumber)
+        const center = []
+        center.push(indexList1[indexList1.length / 2])
+        center.push(indexList2[indexList2.length / 2])
+        this.view = new View({
+            center,
+            zoom: 10
+        })
     }
 }
 
