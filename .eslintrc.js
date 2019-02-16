@@ -1,6 +1,10 @@
 module.exports = {
     root: true,
-    parser: 'babel-eslint',
+    parserOptions: {
+        "parser": "babel-eslint",
+        "ecmaVersion": 2017,
+        "sourceType": "module"
+    },
     env: {
         "browser": true,
         "commonjs": true,
@@ -25,7 +29,7 @@ module.exports = {
         //'linebreak-style': [2, "unix"],             //使用unix换行符\n 而不是\r\n
         'quotes': [
             2, "single",                            //字符串使用单引号
-            { avoidEscape: true }                   //允许单引号中嵌套使用双引号
+            {avoidEscape: true}                   //允许单引号中嵌套使用双引号
         ],
         'prefer-template': 2,                       //建议使用模板文字而不是字符串连接
         'template-curly-spacing': 2,                //强制在模板字符串中不使用间距
