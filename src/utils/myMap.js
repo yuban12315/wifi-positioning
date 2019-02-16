@@ -21,6 +21,7 @@ class myMap {
             source: vectorSource,
             style: this.$getStyle()
         })
+        //111
         const map = new Map({
             layers: [
                 vectorLayer
