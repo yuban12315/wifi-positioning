@@ -8,20 +8,40 @@ import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style.js'
 class myMap {
     constructor (data) {
         this.data = data
-        this.map = null
-        this.center()
+        this.map = null // Map实体
+        this.center = null // 地图中心位置
+
         this.initMap()
     }
     initMap () {
-        const jsonData = this.data
+        const indexList1 = []
+        const indexList2 = []
+        for (const Feature of this.data.features) {
+            indexList1.push(Feature.geometry.coordinates[0][0][0])
+            indexList2.push(Feature.geometry.coordinates[0][0][1])
+        }
+        // 排序
+        function sortNumber (a, b) {
+            return a - b
+        }
+        indexList1.sort(sortNumber)
+        indexList2.sort(sortNumber)
+        const center = []
+        center.push(indexList1[indexList1.length / 2])
+        center.push(indexList2[indexList2.length / 2])
+        this.center = center
+        this.view = new View({
+            center,
+            zoom: 10
+        })
+
         const vectorSource = new VectorSource({
-            features: (new GeoJSON()).readFeatures(jsonData)
+            features: (new GeoJSON()).readFeatures(this.data)
         })
         const vectorLayer = new VectorLayer({
             source: vectorSource,
             style: this.$getStyle()
         })
-        //111
         const map = new Map({
             layers: [
                 vectorLayer
@@ -108,28 +128,6 @@ class myMap {
 
     getMap () {
         return this.map
-    }
-
-    center () {
-        const indexList1 = []
-        const indexList2 = []
-        for (const Feature of this.data.features) {
-            indexList1.push(Feature.geometry.coordinates[0][0][0])
-            indexList2.push(Feature.geometry.coordinates[0][0][1])
-        }
-        // 排序
-        function sortNumber (a, b) {
-            return a - b
-        }
-        indexList1.sort(sortNumber)
-        indexList2.sort(sortNumber)
-        const center = []
-        center.push(indexList1[indexList1.length / 2])
-        center.push(indexList2[indexList2.length / 2])
-        this.view = new View({
-            center,
-            zoom: 10
-        })
     }
 }
 
