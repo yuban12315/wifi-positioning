@@ -4,6 +4,8 @@ import {Vector as VectorLayer} from 'ol/layer.js'
 import {Vector as VectorSource} from 'ol/source.js'
 import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style.js'
 import Map from 'ol/Map'
+import Feature from 'ol/Feature'
+import Point from 'ol/geom/Point'
 
 class MyMap {
     constructor (data) {
@@ -13,8 +15,10 @@ class MyMap {
         this.upperLeft = null// 地图左上角
         this.center = null // 地图中心位置
         this.lowerRight = null// 地图右下角
+        this._vectorLayer = null
 
         this.initMap()
+        this.addPoint(1)
     }
     initMap () {
         const indexList1 = []
@@ -30,9 +34,11 @@ class MyMap {
         indexList1.sort(sortNumber)
         indexList2.sort(sortNumber)
         const length = indexList1.length
+        // 记录地图信息
         this.upperLeft = [indexList1[0], indexList2[0]]
         this.center = [indexList1[length / 2], indexList2[length / 2]]
         this.lowerRight = [indexList1[length - 1], indexList2[length - 1]]
+
         console.log(this.upperLeft, this.lowerRight)
         this.view = new View({
             center: this.center,
@@ -46,6 +52,7 @@ class MyMap {
             source: vectorSource,
             style: this.$getStyle()
         })
+        this._vectorLayer = vectorLayer
         this.map = new Map({
             layers: [
                 vectorLayer
@@ -132,6 +139,17 @@ class MyMap {
 
     getMap () {
         return this.map
+    }
+
+    // 根据相对位置返回字地图上的准确位置
+    getAbsolutePosition (position) {
+        //
+    }
+
+    addPoint (position) {
+        // Feature(new Point([0, 0]));14246.536543217793
+        // 1: 92420.94433307409
+        this._vectorLayer.getSource().addFeature(new Feature(new Point([10000, 80000])))
     }
 }
 
