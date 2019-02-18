@@ -1,15 +1,18 @@
-import Map from 'ol/Map.js'
 import View from 'ol/View.js'
 import GeoJSON from 'ol/format/GeoJSON.js'
 import {Vector as VectorLayer} from 'ol/layer.js'
 import {Vector as VectorSource} from 'ol/source.js'
 import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style.js'
+import Map from 'ol/Map'
 
-class myMap {
+class MyMap {
     constructor (data) {
-        this.data = data
+        this.data = data// GeoJSON数据
         this.map = null // Map实体
+        this.view = null
+        this.upperLeft = null// 地图左上角
         this.center = null // 地图中心位置
+        this.lowerRight = null// 地图右下角
 
         this.initMap()
     }
@@ -26,13 +29,14 @@ class myMap {
         }
         indexList1.sort(sortNumber)
         indexList2.sort(sortNumber)
-        const center = []
-        center.push(indexList1[indexList1.length / 2])
-        center.push(indexList2[indexList2.length / 2])
-        this.center = center
+        const length = indexList1.length
+        this.upperLeft = [indexList1[0], indexList2[0]]
+        this.center = [indexList1[length / 2], indexList2[length / 2]]
+        this.lowerRight = [indexList1[length - 1], indexList2[length - 1]]
+        console.log(this.upperLeft, this.lowerRight)
         this.view = new View({
-            center,
-            zoom: 10
+            center: this.center,
+            zoom: 11
         })
 
         const vectorSource = new VectorSource({
@@ -42,7 +46,7 @@ class myMap {
             source: vectorSource,
             style: this.$getStyle()
         })
-        const map = new Map({
+        this.map = new Map({
             layers: [
                 vectorLayer
             ],
@@ -131,4 +135,4 @@ class myMap {
     }
 }
 
-export default myMap
+export default MyMap
