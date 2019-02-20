@@ -10,20 +10,33 @@ import MyMap from '../utils/MyMap'
 export default {
     name: 'Map',
     data () {
-        return {}
+        return {
+            myMap: ''
+        }
     },
-    created () {
-        const data = this.$localStorage.get('data')
+    async created () {
+        console.log('create')
+        const data = await this.$localStorage.get('data')
         if (data !== null || data !== undefined) {
-            this.initMap()
+            this.Map()
+            this.getPosition()
         }
     },
     methods: {
-        initMap () {
+        // 初始化地图
+        Map () {
             const jsonData = JSON.parse(this.$localStorage.get('data'))
             const myMap = new MyMap(jsonData)
+            this.myMap = myMap
             const map = myMap.getMap()
             // console.log(map)
+        },
+        // 获取定位信息
+        async getPosition () {
+            const res = await this.$axios.get('/api/position/list')
+            if (res.status) {
+                this.myMap.refreshMap(res.data.data)
+            }
         }
     }
 }

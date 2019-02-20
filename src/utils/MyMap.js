@@ -18,7 +18,6 @@ class MyMap {
         this._vectorLayer = null
 
         this.initMap()
-        this.addPoint(1)
     }
     initMap () {
         const indexList1 = []
@@ -39,7 +38,6 @@ class MyMap {
         this.center = [indexList1[length / 2], indexList2[length / 2]]
         this.lowerRight = [indexList1[length - 1], indexList2[length - 1]]
 
-        console.log(this.upperLeft, this.lowerRight)
         this.view = new View({
             center: this.center,
             zoom: 11
@@ -141,15 +139,29 @@ class MyMap {
         return this.map
     }
 
-    // 根据相对位置返回字地图上的准确位置
-    getAbsolutePosition (position) {
+    // 根据实际地图大小,算出准确的点坐标
+    $getAbsolutePosition (position) {
         //
+        const mapWidth = this.lowerRight[0] - this.upperLeft[0]
+        const mapHeight = this.lowerRight[1] - this.upperLeft[1]
+        console.log('Map:')
+        console.log(mapWidth, mapHeight)
+        const x = position[0] * mapWidth + this.upperLeft[0]
+        const y = position[1] * mapHeight + this.upperLeft[1]
+        return [x, y]
     }
 
-    addPoint (position) {
-        // Feature(new Point([0, 0]));14246.536543217793
-        // 1: 92420.94433307409
-        this._vectorLayer.getSource().addFeature(new Feature(new Point([10000, 80000])))
+    // 刷新地图,并添加定位点
+    refreshMap (pointList) {
+        this._vectorLayer.getSource().clear()
+        this._vectorLayer.getSource().addFeatures((new GeoJSON().readFeatures(this.data)))
+        for (const point of pointList) {
+            const absolutePosition = this.$getAbsolutePosition(point.position)
+            console.log('Point: ')
+            console.log(absolutePosition)
+            this._vectorLayer.getSource().addFeature(new Feature(new Point(absolutePosition)))
+            console.log(`添加定位点: ${point.name} : ${absolutePosition}`)
+        }
     }
 }
 
